@@ -4,6 +4,18 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <style>
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+          #map {
+            height: 100%;
+          }
+        </style>
         <title> 低碳运动 </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,13 +35,347 @@
             {
                 document.write('<link rel="stylesheet" id="theme-style" href="css/app.css">');
             }
-        </script>
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    center: {lat: 31.025679, lng: 121.435842},
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  });
+
+  var flightPlanCoordinates = [{lat: 31.025522, lng: 121.426745},
+{lat: 31.025161, lng: 121.426909},
+{lat: 31.024800, lng: 121.427072},
+{lat: 31.024439, lng: 121.427236},
+{lat: 31.024078, lng: 121.427399},
+{lat: 31.024555, lng: 121.427597},
+{lat: 31.024671, lng: 121.427958},
+{lat: 31.024787, lng: 121.428319},
+{lat: 31.024903, lng: 121.428680},
+{lat: 31.025020, lng: 121.429041},
+{lat: 31.025136, lng: 121.429402},
+{lat: 31.025252, lng: 121.429763},
+{lat: 31.025368, lng: 121.430124},
+{lat: 31.025484, lng: 121.430485},
+{lat: 31.025007, lng: 121.430310},
+{lat: 31.024646, lng: 121.430476},
+{lat: 31.024285, lng: 121.430643},
+{lat: 31.023924, lng: 121.430809},
+{lat: 31.023563, lng: 121.430975},
+{lat: 31.023202, lng: 121.431141},
+{lat: 31.022841, lng: 121.431307},
+{lat: 31.022743, lng: 121.430780},
+{lat: 31.022619, lng: 121.430419},
+{lat: 31.022495, lng: 121.430058},
+{lat: 31.022371, lng: 121.429697},
+{lat: 31.022246, lng: 121.429336},
+{lat: 31.022122, lng: 121.428975},
+{lat: 31.021998, lng: 121.428614},
+{lat: 31.021874, lng: 121.428253},
+{lat: 31.021750, lng: 121.427892},
+{lat: 31.021513, lng: 121.428356},
+{lat: 31.021152, lng: 121.428552},
+{lat: 31.020791, lng: 121.428749},
+{lat: 31.020430, lng: 121.428946},
+{lat: 31.020069, lng: 121.429142},
+{lat: 31.019708, lng: 121.429339},
+{lat: 31.019347, lng: 121.429536},
+{lat: 31.018986, lng: 121.429732},
+{lat: 31.018625, lng: 121.429929},
+{lat: 31.018264, lng: 121.430126},
+{lat: 31.018574, lng: 121.430290},
+{lat: 31.018686, lng: 121.430651},
+{lat: 31.018797, lng: 121.431012},
+{lat: 31.018909, lng: 121.431373},
+{lat: 31.019020, lng: 121.431734},
+{lat: 31.019132, lng: 121.432095},
+{lat: 31.019243, lng: 121.432456},
+{lat: 31.019355, lng: 121.432817},
+{lat: 31.019466, lng: 121.433178},
+{lat: 31.019577, lng: 121.433539},
+{lat: 31.019689, lng: 121.433900},
+{lat: 31.019800, lng: 121.434261},
+{lat: 31.019912, lng: 121.434622},
+{lat: 31.020023, lng: 121.434983},
+{lat: 31.020135, lng: 121.435344},
+{lat: 31.020246, lng: 121.435705},
+{lat: 31.020357, lng: 121.436066},
+{lat: 31.020469, lng: 121.436427},
+{lat: 31.020580, lng: 121.436788},
+{lat: 31.020692, lng: 121.437149},
+{lat: 31.020803, lng: 121.437510},
+{lat: 31.020915, lng: 121.437871},
+{lat: 31.021026, lng: 121.438232},
+{lat: 31.021138, lng: 121.438593},
+{lat: 31.021249, lng: 121.438954},
+{lat: 31.021360, lng: 121.439315},
+{lat: 31.021472, lng: 121.439676},
+{lat: 31.021583, lng: 121.440037},
+{lat: 31.021695, lng: 121.440398},
+{lat: 31.021806, lng: 121.440759},
+{lat: 31.021918, lng: 121.441120},
+{lat: 31.022029, lng: 121.441481},
+{lat: 31.022141, lng: 121.441842},
+{lat: 31.022252, lng: 121.442203},
+{lat: 31.022363, lng: 121.442564},
+{lat: 31.022475, lng: 121.442925},
+{lat: 31.022586, lng: 121.443286},
+{lat: 31.022698, lng: 121.443647},
+{lat: 31.022809, lng: 121.444008},
+{lat: 31.022921, lng: 121.444369},
+{lat: 31.023032, lng: 121.444730},
+{lat: 31.023143, lng: 121.445091},
+{lat: 31.023255, lng: 121.445452},
+{lat: 31.023366, lng: 121.445813},
+{lat: 31.023478, lng: 121.446174},
+{lat: 31.023589, lng: 121.446535},
+{lat: 31.023701, lng: 121.446896},
+{lat: 31.023812, lng: 121.447257},
+{lat: 31.023924, lng: 121.447618},
+{lat: 31.024035, lng: 121.447979},
+{lat: 31.024146, lng: 121.448340},
+{lat: 31.024396, lng: 121.448516},
+{lat: 31.024757, lng: 121.448725},
+{lat: 31.025118, lng: 121.448934},
+{lat: 31.025187, lng: 121.448537},
+{lat: 31.025548, lng: 121.448350},
+{lat: 31.025909, lng: 121.448162},
+{lat: 31.026270, lng: 121.447974},
+{lat: 31.026631, lng: 121.447786},
+{lat: 31.026992, lng: 121.447599},
+{lat: 31.027353, lng: 121.447411},
+{lat: 31.027714, lng: 121.447223},
+{lat: 31.028075, lng: 121.447035},
+{lat: 31.028436, lng: 121.446848},
+{lat: 31.028797, lng: 121.446660},
+{lat: 31.029158, lng: 121.446472},
+{lat: 31.029519, lng: 121.446284},
+{lat: 31.029618, lng: 121.446111},
+{lat: 31.029804, lng: 121.446100},
+{lat: 31.029990, lng: 121.445989},
+{lat: 31.030176, lng: 121.445528},
+{lat: 31.030363, lng: 121.445367},
+{lat: 31.030549, lng: 121.445006},
+{lat: 31.030735, lng: 121.444845},
+{lat: 31.030921, lng: 121.444084},
+{lat: 31.031007, lng: 121.443523}
+  ];
+
+
+ var greenflightPlanCoordinates = [
+{lat: 31.031007, lng: 121.443523},
+{lat: 31.030894, lng: 121.443164},
+{lat: 31.030866, lng: 121.443073},
+{lat: 31.030839, lng: 121.442983},
+{lat: 31.030811, lng: 121.442893},
+{lat: 31.030784, lng: 121.442803},
+{lat: 31.030756, lng: 121.442712},
+{lat: 31.030729, lng: 121.442622},
+{lat: 31.030701, lng: 121.442532},
+{lat: 31.030674, lng: 121.442442},
+{lat: 31.030647, lng: 121.442352},
+{lat: 31.030619, lng: 121.442261},
+{lat: 31.030592, lng: 121.442171},
+{lat: 31.030564, lng: 121.442081},
+{lat: 31.030537, lng: 121.441991},
+{lat: 31.030509, lng: 121.441900},
+{lat: 31.030482, lng: 121.441810},
+{lat: 31.030455, lng: 121.441720},
+{lat: 31.030427, lng: 121.441630},
+{lat: 31.030400, lng: 121.441539},
+{lat: 31.030372, lng: 121.441449},
+{lat: 31.030345, lng: 121.441359},
+{lat: 31.030317, lng: 121.441269},
+{lat: 31.030290, lng: 121.441178},
+{lat: 31.030262, lng: 121.441088},
+{lat: 31.030235, lng: 121.440998},
+{lat: 31.030208, lng: 121.440908},
+{lat: 31.030180, lng: 121.440817},
+{lat: 31.030153, lng: 121.440727},
+{lat: 31.030125, lng: 121.440637},
+{lat: 31.030098, lng: 121.440547},
+{lat: 31.030070, lng: 121.440456},
+{lat: 31.030043, lng: 121.440366},
+{lat: 31.030015, lng: 121.440276},
+{lat: 31.029988, lng: 121.440186},
+{lat: 31.029961, lng: 121.440095},
+{lat: 31.029933, lng: 121.440005},
+{lat: 31.029906, lng: 121.439915},
+{lat: 31.029878, lng: 121.439825},
+{lat: 31.029851, lng: 121.439734},
+{lat: 31.029823, lng: 121.439644},
+{lat: 31.029796, lng: 121.439554},
+{lat: 31.029769, lng: 121.439464},
+{lat: 31.029741, lng: 121.439373},
+{lat: 31.029714, lng: 121.439283},
+{lat: 31.029686, lng: 121.439193},
+{lat: 31.029659, lng: 121.439103},
+{lat: 31.029631, lng: 121.439012},
+{lat: 31.029604, lng: 121.438922},
+{lat: 31.029576, lng: 121.438832},
+{lat: 31.029549, lng: 121.438742},
+{lat: 31.029522, lng: 121.438651},
+{lat: 31.029494, lng: 121.438561},
+{lat: 31.029467, lng: 121.438471},
+{lat: 31.029439, lng: 121.438381},
+{lat: 31.029412, lng: 121.438290},
+{lat: 31.029384, lng: 121.438200},
+{lat: 31.029357, lng: 121.438110},
+{lat: 31.029329, lng: 121.438020},
+{lat: 31.029302, lng: 121.437929},
+{lat: 31.029275, lng: 121.437839},
+{lat: 31.029247, lng: 121.437749},
+{lat: 31.029220, lng: 121.437659},
+{lat: 31.029192, lng: 121.437568},
+{lat: 31.029165, lng: 121.437478},
+{lat: 31.029137, lng: 121.437388},
+{lat: 31.029110, lng: 121.437298},
+{lat: 31.029083, lng: 121.437207},
+{lat: 31.029055, lng: 121.437117},
+{lat: 31.029028, lng: 121.437027},
+{lat: 31.029000, lng: 121.436937},
+{lat: 31.028973, lng: 121.436846},
+{lat: 31.028945, lng: 121.436756},
+{lat: 31.028918, lng: 121.436666},
+{lat: 31.028890, lng: 121.436576},
+{lat: 31.028863, lng: 121.436485},
+{lat: 31.028836, lng: 121.436395},
+{lat: 31.028808, lng: 121.436305},
+{lat: 31.028781, lng: 121.436215},
+{lat: 31.028753, lng: 121.436124},
+{lat: 31.028726, lng: 121.436034},
+{lat: 31.028698, lng: 121.435944},
+{lat: 31.028671, lng: 121.435854},
+{lat: 31.028643, lng: 121.435763},
+{lat: 31.028616, lng: 121.435673},
+{lat: 31.028589, lng: 121.435583},
+{lat: 31.028561, lng: 121.435493},
+{lat: 31.028534, lng: 121.435402},
+{lat: 31.028506, lng: 121.435312},
+{lat: 31.028479, lng: 121.435222},
+{lat: 31.028451, lng: 121.435132},
+{lat: 31.028424, lng: 121.435041},
+{lat: 31.028397, lng: 121.434951},
+{lat: 31.028369, lng: 121.434861},
+{lat: 31.028342, lng: 121.434771},
+{lat: 31.028314, lng: 121.434680},
+{lat: 31.028287, lng: 121.434590},
+{lat: 31.028259, lng: 121.434500},
+{lat: 31.028232, lng: 121.434410},
+{lat: 31.028204, lng: 121.434319},
+{lat: 31.028177, lng: 121.434229},
+{lat: 31.028150, lng: 121.434139},
+{lat: 31.028122, lng: 121.434049},
+{lat: 31.028095, lng: 121.433958},
+{lat: 31.028067, lng: 121.433868},
+{lat: 31.028040, lng: 121.433778},
+{lat: 31.028012, lng: 121.433688},
+{lat: 31.027985, lng: 121.433597},
+{lat: 31.027957, lng: 121.433507},
+{lat: 31.027930, lng: 121.433417},
+{lat: 31.027903, lng: 121.433327},
+{lat: 31.027875, lng: 121.433236},
+{lat: 31.027848, lng: 121.433146},
+{lat: 31.027820, lng: 121.433056},
+{lat: 31.027793, lng: 121.432966},
+{lat: 31.027765, lng: 121.432875},
+{lat: 31.027738, lng: 121.432785},
+{lat: 31.027710, lng: 121.432695},
+{lat: 31.027683, lng: 121.432605},
+{lat: 31.027656, lng: 121.432514},
+{lat: 31.027628, lng: 121.432424},
+{lat: 31.027601, lng: 121.432334},
+{lat: 31.027573, lng: 121.432244},
+{lat: 31.027546, lng: 121.432153},
+{lat: 31.027518, lng: 121.432063},
+{lat: 31.027491, lng: 121.431973},
+{lat: 31.027464, lng: 121.431883},
+{lat: 31.027436, lng: 121.431792},
+{lat: 31.027409, lng: 121.431702},
+{lat: 31.027381, lng: 121.431612},
+{lat: 31.027354, lng: 121.431522},
+{lat: 31.027326, lng: 121.431431},
+{lat: 31.027299, lng: 121.431341},
+{lat: 31.027271, lng: 121.431251},
+{lat: 31.027244, lng: 121.431161},
+{lat: 31.027217, lng: 121.431070},
+{lat: 31.027189, lng: 121.430980},
+{lat: 31.027162, lng: 121.430890},
+{lat: 31.027134, lng: 121.430800},
+{lat: 31.027107, lng: 121.430709},
+{lat: 31.027079, lng: 121.430619},
+{lat: 31.027052, lng: 121.430529},
+{lat: 31.027024, lng: 121.430439},
+{lat: 31.026997, lng: 121.430348},
+{lat: 31.026970, lng: 121.430258},
+{lat: 31.026942, lng: 121.430168},
+{lat: 31.026915, lng: 121.430078},
+{lat: 31.026887, lng: 121.429987},
+{lat: 31.026860, lng: 121.429897},
+{lat: 31.026832, lng: 121.429807},
+{lat: 31.026805, lng: 121.429717},
+{lat: 31.026778, lng: 121.429626},
+{lat: 31.026750, lng: 121.429536},
+{lat: 31.026723, lng: 121.429446},
+{lat: 31.026695, lng: 121.429356},
+{lat: 31.026668, lng: 121.429265},
+{lat: 31.026640, lng: 121.429175},
+{lat: 31.026613, lng: 121.429085},
+{lat: 31.026585, lng: 121.428995},
+{lat: 31.026558, lng: 121.428904},
+{lat: 31.026531, lng: 121.428814},
+{lat: 31.026503, lng: 121.428724},
+{lat: 31.026476, lng: 121.428634},
+{lat: 31.026448, lng: 121.428543},
+{lat: 31.026421, lng: 121.428453},
+{lat: 31.026393, lng: 121.428363},
+{lat: 31.026366, lng: 121.428273},
+{lat: 31.026338, lng: 121.428182},
+{lat: 31.026311, lng: 121.428092},
+{lat: 31.026284, lng: 121.428002},
+{lat: 31.026256, lng: 121.427912},
+{lat: 31.026229, lng: 121.427821},
+{lat: 31.026201, lng: 121.427731},
+{lat: 31.026174, lng: 121.427641},
+{lat: 31.026146, lng: 121.427551},
+{lat: 31.026119, lng: 121.427460},
+{lat: 31.026092, lng: 121.427370},
+{lat: 31.026064, lng: 121.427280},
+{lat: 31.026037, lng: 121.427190},
+{lat: 31.026009, lng: 121.427099},
+{lat: 31.025982, lng: 121.427009},
+{lat: 31.025954, lng: 121.426919},
+{lat: 31.025927, lng: 121.426829},
+{lat: 31.025899, lng: 121.426738},
+{lat: 31.025872, lng: 121.426648},
+{lat: 31.025845, lng: 121.426558}]
+  var flightPath = new google.maps.Polyline({
+    path: flightPlanCoordinates,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+var flightPathgreen = new google.maps.Polyline({
+    path: greenflightPlanCoordinates,
+    geodesic: true,
+    strokeColor: '#00FF00',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+  flightPath.setMap(map);
+  flightPathgreen.setMap(map);
+}
+    </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGGEtHW7l_5GEMwdFdwrEXmVW4XiwFMrs&signed_in=true&callback=initMap"
+        async defer>
+    </script>
     </head>
 
     <body>
         <div class="main-wrapper">
             <div class="app" id="app">
-                <header class="header">
+                <header class="header" style=" background-color: rgba(0,0,0,0.8);">
                     <div class="header-block header-block-collapse hidden-lg-up"> <button class="collapse-btn" id="sidebar-collapse-btn">
     			<i class="fa fa-bars"></i>
     		</button> </div>
@@ -37,37 +383,27 @@
                         <ul class="nav-profile">
                             <li class="notifications new">
                                 <a href="" data-toggle="dropdown"> <i class="fa fa-bell-o"></i> <sup>
-    			      <span class="counter">8</span>
+    			      <span class="counter">2</span>
     			    </sup> </a>
                                 <div class="dropdown-menu notifications-dropdown-menu">
                                     <ul class="notifications-container">
                                         <li>
                                             <a href="" class="notification-item">
                                                 <div class="img-col">
-                                                    <div class="img" style="background-image: url('assets/faces/3.jpg')"></div>
+                                                    <div class="img" style="background-image: url('assets/like.png')"></div>
                                                 </div>
                                                 <div class="body-col">
-                                                    <p> <span class="accent">Zack Alien</span> pushed new commit: <span class="accent">Fix page load performance issue</span>. </p>
+                                                    <p> <span class="accent">7月16日，您已经走路1公里，节炭0.1吨哦. </p>
                                                 </div>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="" class="notification-item">
                                                 <div class="img-col">
-                                                    <div class="img" style="background-image: url('assets/faces/5.jpg')"></div>
+                                                    <div class="img" style="background-image: url('assets/like.png')"></div>
                                                 </div>
                                                 <div class="body-col">
-                                                    <p> <span class="accent">Amaya Hatsumi</span> started new task: <span class="accent">Dashboard UI design.</span>. </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class="notification-item">
-                                                <div class="img-col">
-                                                    <div class="img" style="background-image: url('assets/faces/8.jpg')"></div>
-                                                </div>
-                                                <div class="body-col">
-                                                    <p> <span class="accent">Andy Nouman</span> deployed new version of <span class="accent">NodeJS REST Api V3</span> </p>
+                                                    <p> <span class="accent">7月17日，跑步2公里，好棒哦！ </p>
                                                 </div>
                                             </a>
                                         </li>
@@ -83,15 +419,15 @@
                             </li>
                             <li class="profile dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <div class="img" style="background-image: url('https://avatars3.githubusercontent.com/u/3959008?v=3&s=40')"> </div> <span class="name">
+                                    <div class="img" style="background-image: url('assets/faces/me.jpg"> </div> <span class="name">
     			      John Doe
     			    </span> </a>
                                 <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    <a class="dropdown-item" href="#"> <i class="fa fa-user icon"></i> Profile </a>
-                                    <a class="dropdown-item" href="#"> <i class="fa fa-bell icon"></i> Notifications </a>
-                                    <a class="dropdown-item" href="#"> <i class="fa fa-gear icon"></i> Settings </a>
+                                    <a class="dropdown-item" href="#"> <i class="fa fa-user icon"></i> 个人纪录 </a>
+                                    <a class="dropdown-item" href="#"> <i class="fa fa-bell icon"></i> 消息 </a>
+                                    <a class="dropdown-item" href="#"> <i class="fa fa-gear icon"></i> 设置 </a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="login.html"> <i class="fa fa-power-off icon"></i> Logout </a>
+                                    <a class="dropdown-item" href="login.html"> <i class="fa fa-power-off icon"></i> 退出 </a>
                                 </div>
                             </li>
                         </ul>
@@ -101,20 +437,18 @@
                     <div class="sidebar-container">
                         <div class="sidebar-header">
                             <div class="brand">
-                                <div class="logo"> <span class="l l1"></span> <span class="l l2"></span> <span class="l l3"></span> <span class="l l4"></span> <span class="l l5"></span> </div> 低碳运动app </div>
+                                <div class="logo"> <span class="l l1"></span> <span class="l l2"></span> <span class="l l3"></span> <span class="l l4"></span> <span class="l l5"></span> </div> HazeFree </div>
                         </div>
                         <nav class="menu">
                             <ul class="nav metismenu" id="sidebar-menu">
                                 <li class="active">
-                                    <a href="index.html"> <i class="fa fa-home"></i> 地图 </a>
+                                    <a href="index.html"> <i class="fa fa-plane"></i> 地图 </a>
                                 </li>
                                 <li>
-                                    <a href=""> <i class="fa fa-bar-chart"></i> 统计 </a>
-                                  
+                                    <a href="index_chart.html"> <i class="fa fa-bar-chart"></i> 统计 </a>
                                 </li>
                                 <li>
-                                    <a href=""> <i class="fa fa-desktop"></i> 排行榜 </a>
-                                    
+                                    <a href="index_ranking.html"> <i class="fa fa-bookmark"></i> 排行榜 </a>
                                 </li>
                             </ul>
                         </nav>
@@ -183,18 +517,19 @@
                 </aside>
                 <div class="sidebar-overlay" id="sidebar-overlay"></div>
                 <article class="content dashboard-page">
-
+                    <div id="map" style="    height: 535px;"></div>
                 </article>
                 <footer class="footer">
-                <div style="margin-left: 60px;width: 40px;height: 40px;">
+                <a href="index.html"><div style="margin-left: 60px;width: 40px;height: 40px;">
                 <div class="tab-map" style="background-image: url('assets/placeholder.png');width: 20px;height: 20px;background-size: 20px 20px    ;"><div style="    width: 50px;padding-top: 19px;font-size: 14px;">地图
                 </div>
                 </div>
-                </div>
-            <div class="tab-list" style="margin-right: 60px;font-size: 14px;"><div ></div><div style="
-    font-size: 14px;
-"><div class="tab-map" style="background-image: url('assets/placeholder.png');width: 20px;height: 20px;background-size: 20px 20px    ;"></div>统计</div></div>
-                  <div class="tab-list" style="margin-right: 60px;font-size: 14px;"><div class="tab-map" style="background-image: url('assets/placeholder.png');width: 20px;height: 20px;background-size: 20px 20px    ;">排行榜</div></div>
+                </div></a>
+                <a href="index_chart.html">
+            <div class="tab-list" style="font-size: 14px;"><div style="background-image: url('assets/graphic1.png');width: 20px;height: 20px;background-size: 20px 20px ;margin-left: 4px;"></div><div style="font-size: 14px;">统计</div></div></a>
+                <a href="index_ranking.html">
+                  <div class="tab-rank" style="margin-right: 50px;font-size: 14px;"><div style="background-image: url('assets/ranking.png');width: 20px;height: 20px;background-size: 20px 20px;    margin-left: 10px; "></div><div>排行榜</div></div>
+             </a>
                 </footer>
                 <div class="modal fade" id="modal-media">
                     <div class="modal-dialog modal-lg">
