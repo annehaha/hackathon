@@ -35,8 +35,6 @@
             {
                 document.write('<link rel="stylesheet" id="theme-style" href="css/app.css">');
             }
-        </script>
-        <script>
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -369,7 +367,7 @@ var flightPathgreen = new google.maps.Polyline({
   flightPathgreen.setMap(map);
 }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGGEtHW7l_5GEMwdFdwrEXmVW4XiwFMrs&signed_in=true&callback=initMap"
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGGEtHW7l_5GEMwdFdwrEXmVW4XiwFMrs&signed_in=true&callback=initMap"
         async defer>
     </script>
     </head>
@@ -377,7 +375,7 @@ var flightPathgreen = new google.maps.Polyline({
     <body>
         <div class="main-wrapper">
             <div class="app" id="app">
-                <header class="header" style="background-color: gold;">
+                <header class="header" style=" background-color: rgba(0,0,0,0.8);">
                     <div class="header-block header-block-collapse hidden-lg-up"> <button class="collapse-btn" id="sidebar-collapse-btn">
     			<i class="fa fa-bars"></i>
     		</button> </div>
@@ -519,7 +517,7 @@ var flightPathgreen = new google.maps.Polyline({
                 </aside>
                 <div class="sidebar-overlay" id="sidebar-overlay"></div>
                 <article class="content dashboard-page">
-                    <div id="map"></div>
+                    <div id="map" style="    height: 535px;"></div>
                 </article>
                 <footer class="footer">
                 <a href="index.html"><div style="margin-left: 60px;width: 40px;height: 40px;">
