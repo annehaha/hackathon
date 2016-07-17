@@ -402,6 +402,7 @@ $(function() {
                 content: "x: %x, y: %y"
             }
         };
+        /*增加数据*/
         var barData = {
             label: "bar",
             data: [
