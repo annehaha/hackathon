@@ -1,0 +1,468 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <style>
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+          #map {
+            height: 100%;
+          }
+        </style>
+        <title> 低碳运动 </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        <link rel="stylesheet" href="css/vendor.css">
+        <!-- Theme initialization -->
+        <script>
+            var themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
+            {};
+            var themeName = themeSettings.themeName || '';
+            if (themeName)
+            {
+                document.write('<link rel="stylesheet" id="theme-style" href="css/app-' + themeName + '.css">');
+            }
+            else
+            {
+                document.write('<link rel="stylesheet" id="theme-style" href="css/app.css">');
+            }
+				</script>
+				<script src="js/jquery.min.js"></script>
+				<script>
+						var shortDistance = 2;
+						var walk = 3;
+						var bicycle = 10;
+						//cache
+						var array;
+						
+						function getGeoInfo(){
+							var dataArray;
+							$.ajax({
+								url: 'http://localhost:8080/Hackathon/GetGeoData',
+								type:'get',
+								async: false,
+								success: function(data){
+									dataArray = eval('(' + data + ')');				
+								},
+								error:function(){
+								}
+							});
+							var statusArray = new Array();
+							var polylineArray = new Array();
+							var polyline = new Array();
+							var distanceArray = new Array();
+									
+							var pre = dataArray[0];
+							var post;
+							
+							var currStatus;
+							var preStatus = -1;
+																		
+							for(var i = 1, len = dataArray.length; i < len; i++){
+								post = dataArray[i];
+								var distance = GetDistance(post.lat, post.lng, pre.lat, pre.lng)
+								var velocity = distance / ((post.timestamp - pre.timestamp) / 3600);
+								if(velocity < walk){
+									currStatus = 0
+								}else if(velocity < bicycle){
+									currStatus = 1			
+								}else{
+									currStatus = 2
+								}
+								
+								if(currStatus != preStatus){
+										polyline[polyline.length] = eval('(' + "{lat:" + pre.lat + ",lng:" + pre.lng + "}" + ')');
+										polyline = new Array();
+										polylineArray[polylineArray.length] = polyline;
+										statusArray[statusArray.length] = currStatus;
+										distanceArray[distanceArray.length] =  0;
+								}
+								polyline[polyline.length] = eval('(' + "{lat:" + pre.lat + ",lng:" + pre.lng + "}" + ')');
+								distanceArray[distanceArray.length - 1] += distance;	
+								
+								preStatus = currStatus;
+								pre = post;	
+							}
+							polyline[polyline.length] = eval('(' + "{lat:" + pre.lat + ",lng:" + pre.lng + "}" + ')');
+							resultArray = new Array();
+							resultArray[0] = statusArray;
+							resultArray[1] = polylineArray;
+							resultArray[2] = distanceArray;
+							
+							array = resultArray;
+							
+							return resultArray;
+						}
+						
+						function getScore(){
+							if(array == undefined){
+								getGeoInfo();
+							}
+							
+							var high = 2;
+							var middle = 1.5
+							var low = 1.3
+							var verylow = 1.1
+							
+							var carbonEmission = 0.197;
+							
+							var statusArray = array[0];
+							var distanceArray = array[2];
+							
+							var len = array[0].length;
+							
+							var carbon = 0;
+							var score = 0;
+							
+							for(i = 0; i < len; i++){
+								
+									var distance = distanceArray[i];
+									var stat = statusArray[i];
+								
+						    	if(distance < 1){
+						    		if(stat == 0 || stat == 1){
+						    			carbon += carbonEmission * distance;
+						    			score += carbonEmission * distance * verylow;
+						    		}else{
+						    			carbon -= carbonEmission * distance;
+						    			score -= carbonEmission * distance * high;
+						    		}
+						    	}else if(distance < 2){
+						    		if(stat == 0 || stat == 1){
+						    			carbon += carbonEmission * distance;
+						    			score += carbonEmission * distance * low;
+						    		}else{
+						    			carbon -= carbonEmission * distance;
+						    			score -= carbonEmission * distance * middle;
+						    		}
+						    	}else if(distance < 3){
+						    		if(stat == 0 || stat == 1){
+						    			carbon += carbonEmission * distance;
+						    			score += carbonEmission * distance * middle;
+						    		}else{
+						    			carbon -= carbonEmission * distance;
+						    			score -= carbonEmission * distance * low;
+						    		}
+						    	}else{
+						    		if(stat == 0 || stat == 1){
+						    			carbon += carbonEmission * distance;
+						    			score += carbonEmission * distance * high;
+						    		}else{
+						    			carbon -= carbonEmission * distance;
+						    			score -= carbonEmission * distance;
+						    		}
+						    	}
+							}
+							
+							var resultArray = [];
+							resultArray[0] = carbon;
+							resultArray[1] = score;
+							
+							return resultArray;
+						}
+						
+						function Rad(d){
+				       return d * Math.PI / 180.0;
+				    }
+				
+				    function GetDistance(lat1,lng1,lat2,lng2){ 
+				        var radLat1 = Rad(lat1);
+				        var radLat2 = Rad(lat2);
+				        var a = radLat1 - radLat2;
+				        var  b = Rad(lng1) - Rad(lng2);
+				        var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+				        s = s *6378.137;  // EARTH_RADIUS;
+				        s = Math.round(s * 10000) / 10000; //km
+				        return s;
+				    }
+				    
+				    function initMap() {
+						  var map = new google.maps.Map(document.getElementById('map'), {
+						    zoom: 14,
+						    center: {lat: 31.025679, lng: 121.435842},
+						    mapTypeId: google.maps.MapTypeId.TERRAIN
+						  });
+						
+						  var color = ['#00FF00','#00FF00','#FF0000'];
+						
+							var flightPlanCoordinates = getGeoInfo();
+						  //var flightPlanCoordinates = getRount(arr);
+						  var flightPaths = [];
+						  for(i = 0; i < flightPlanCoordinates[0].length; i ++){
+						    	flightPaths[i] = new google.maps.Polyline({
+						      path: flightPlanCoordinates[1][i],
+						      geodesic: true,
+						      strokeColor: color[flightPlanCoordinates[0][i]],
+						      strokeOpacity: 1.0,
+						      strokeWeight: 2
+						    });
+						    flightPaths[i].setMap(map);
+							}
+							
+							var score = getScore();
+							
+							var contentString = '<div id="content">'+"节碳量" + score[0].toFixed(4) + "KG"+'<br/>'+"贡献值" + score[1].toFixed(4) +"</div>";
+						  var infowindow = new google.maps.InfoWindow({
+						    content: contentString
+						  });
+						
+							//var uluru = {lat: 31.025845, lng: 121.426558};
+							var finalPath = flightPlanCoordinates[1][flightPlanCoordinates[1].length - 1];
+							var uluru = finalPath[finalPath.length - 1];
+						
+						  var marker = new google.maps.Marker({
+						    position: uluru,
+						    map: map,
+						    title: 'Uluru (Ayers Rock)'
+						  });
+						  marker.addListener('click', function() {
+						    infowindow.open(map, marker);
+						  });
+			
+						}
+							 
+			    </script>
+			    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGGEtHW7l_5GEMwdFdwrEXmVW4XiwFMrs&signed_in=true&callback=initMap"
+			        async defer>
+			    </script>
+    </head>
+
+    <body>
+        <div class="main-wrapper">
+            <div class="app" id="app">
+                <header class="header" style=" background-color: rgba(0,0,0,0.8);">
+                    <div class="header-block header-block-collapse hidden-lg-up"> <button class="collapse-btn" id="sidebar-collapse-btn">
+    			<i class="fa fa-bars"></i>
+    		</button> </div>
+                    <div class="header-block header-block-nav">
+                        <ul class="nav-profile">
+                            <li class="notifications new">
+                                <a href="" data-toggle="dropdown"> <i class="fa fa-bell-o"></i> <sup>
+    			      <span class="counter">2</span>
+    			    </sup> </a>
+                                <div class="dropdown-menu notifications-dropdown-menu">
+                                    <ul class="notifications-container">
+                                        <li>
+                                            <a href="" class="notification-item">
+                                                <div class="img-col">
+                                                    <div class="img" style="background-image: url('assets/like.png')"></div>
+                                                </div>
+                                                <div class="body-col">
+                                                    <p> <span class="accent">7月16日，您已经走路1公里，节炭0.1吨哦. </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class="notification-item">
+                                                <div class="img-col">
+                                                    <div class="img" style="background-image: url('assets/like.png')"></div>
+                                                </div>
+                                                <div class="body-col">
+                                                    <p> <span class="accent">7月17日，跑步2公里，好棒哦！ </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <footer>
+                                        <ul>
+                                            <li> <a href="">
+    			            View All
+    			          </a> </li>
+                                        </ul>
+                                    </footer>
+                                </div>
+                            </li>
+                            <li class="profile dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <div class="img" style="background-image: url('assets/faces/me.jpg"> </div> <span class="name">
+    			      John Doe
+    			    </span> </a>
+                                <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <a class="dropdown-item" href="#"> <i class="fa fa-user icon"></i> 个人纪录 </a>
+                                    <a class="dropdown-item" href="#"> <i class="fa fa-bell icon"></i> 消息 </a>
+                                    <a class="dropdown-item" href="#"> <i class="fa fa-gear icon"></i> 设置 </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="login.html"> <i class="fa fa-power-off icon"></i> 退出 </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </header>
+                <aside class="sidebar">
+                    <div class="sidebar-container">
+                        <div class="sidebar-header">
+                            <div class="brand">
+                                <div class="logo"> <span class="l l1"></span> <span class="l l2"></span> <span class="l l3"></span> <span class="l l4"></span> <span class="l l5"></span> </div> HazeFree </div>
+                        </div>
+                        <nav class="menu">
+                            <ul class="nav metismenu" id="sidebar-menu">
+                                <li class="active">
+                                    <a href="index.html"> <i class="fa fa-plane"></i> 地图 </a>
+                                </li>
+                                <li>
+                                    <a href="index_chart.html"> <i class="fa fa-bar-chart"></i> 统计 </a>
+                                </li>
+                                <li>
+                                    <a href="index_ranking.html"> <i class="fa fa-bookmark"></i> 排行榜 </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <footer class="sidebar-footer">
+                        <ul class="nav metismenu" id="customize-menu">
+                            <li>
+                                <ul>
+                                    <li class="customize">
+                                        <div class="customize-item">
+                                            <div class="row customize-header">
+                                                <div class="col-xs-4"> </div>
+                                                <div class="col-xs-4"> <label class="title">fixed</label> </div>
+                                                <div class="col-xs-4"> <label class="title">static</label> </div>
+                                            </div>
+                                            <div class="row hidden-md-down">
+                                                <div class="col-xs-4"> <label class="title">Sidebar:</label> </div>
+                                                <div class="col-xs-4"> <label>
+    				                        <input class="radio" type="radio" name="sidebarPosition" value="sidebar-fixed" >
+    				                        <span></span>
+    				                    </label> </div>
+                                                <div class="col-xs-4"> <label>
+    				                        <input class="radio" type="radio" name="sidebarPosition" value="">
+    				                        <span></span>
+    				                    </label> </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4"> <label class="title">Header:</label> </div>
+                                                <div class="col-xs-4"> <label>
+    				                        <input class="radio" type="radio" name="headerPosition" value="header-fixed">
+    				                        <span></span>
+    				                    </label> </div>
+                                                <div class="col-xs-4"> <label>
+    				                        <input class="radio" type="radio" name="headerPosition" value="">
+    				                        <span></span>
+    				                    </label> </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4"> <label class="title">Footer:</label> </div>
+                                                <div class="col-xs-4"> <label>
+    				                        <input class="radio" type="radio" name="footerPosition" value="footer-fixed">
+    				                        <span></span>
+    				                    </label> </div>
+                                                <div class="col-xs-4"> <label>
+    				                        <input class="radio" type="radio" name="footerPosition" value="">
+    				                        <span></span>
+    				                    </label> </div>
+                                            </div>
+                                        </div>
+                                        <div class="customize-item">
+                                            <ul class="customize-colors">
+                                                <li> <span class="color-item color-red" data-theme="red"></span> </li>
+                                                <li> <span class="color-item color-orange" data-theme="orange"></span> </li>
+                                                <li> <span class="color-item color-green" data-theme="green"></span> </li>
+                                                <li> <span class="color-item color-seagreen" data-theme="seagreen"></span> </li>
+                                                <li> <span class="color-item color-blue active" data-theme=""></span> </li>
+                                                <li> <span class="color-item color-purple" data-theme="purple"></span> </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <a href=""> <i class="fa fa-cog"></i> Customize </a>
+                            </li>
+                        </ul>
+                    </footer>
+                </aside>
+                <div class="sidebar-overlay" id="sidebar-overlay"></div>
+                <article class="content dashboard-page">
+                    <div id="map" style="    height: 535px;"></div>
+                </article>
+                <footer class="footer">
+                <a href="index.html"><div style="margin-left: 60px;width: 40px;height: 40px;">
+                <div class="tab-map" style="background-image: url('assets/placeholder.png');width: 20px;height: 20px;background-size: 20px 20px    ;"><div style="    width: 50px;padding-top: 19px;font-size: 14px;">地图
+                </div>
+                </div>
+                </div></a>
+                <a href="index_chart.html">
+            <div class="tab-list" style="font-size: 14px;"><div style="background-image: url('assets/graphic1.png');width: 20px;height: 20px;background-size: 20px 20px ;margin-left: 4px;"></div><div style="font-size: 14px;">统计</div></div></a>
+                <a href="index_ranking.html">
+                  <div class="tab-rank" style="margin-right: 50px;font-size: 14px;"><div style="background-image: url('assets/ranking.png');width: 20px;height: 20px;background-size: 20px 20px;    margin-left: 10px; "></div><div>排行榜</div></div>
+             </a>
+                </footer>
+                <div class="modal fade" id="modal-media">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    					<span aria-hidden="true">&times;</span>
+    					<span class="sr-only">Close</span>
+    				</button>
+                                <h4 class="modal-title">Media Library</h4> </div>
+                            <div class="modal-body modal-tab-container">
+                                <ul class="nav nav-tabs modal-tabs" role="tablist">
+                                    <li class="nav-item"> <a class="nav-link" href="#gallery" data-toggle="tab" role="tab">Gallery</a> </li>
+                                    <li class="nav-item"> <a class="nav-link active" href="#upload" data-toggle="tab" role="tab">Upload</a> </li>
+                                </ul>
+                                <div class="tab-content modal-tab-content">
+                                    <div class="tab-pane fade" id="gallery" role="tabpanel">
+                                        <div class="images-container">
+                                            <div class="row"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade active in" id="upload" role="tabpanel">
+                                        <div class="upload-container">
+                                            <div id="dropzone">
+                                                <form action="/" method="POST" enctype="multipart/form-data" class="dropzone needsclick dz-clickable" id="demo-upload">
+                                                    <div class="dz-message-block">
+                                                        <div class="dz-message needsclick"> Drop files here or click to upload. </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Insert Selected</button> </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <div class="modal fade" id="confirm-modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    					<span aria-hidden="true">&times;</span>
+    				</button>
+                                <h4 class="modal-title"><i class="fa fa-warning"></i> Alert</h4> </div>
+                            <div class="modal-body">
+                                <p>Are you sure want to do this?</p>
+                            </div>
+                            <div class="modal-footer"> <button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button> <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button> </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
+        </div>
+        <!-- Reference block for JS -->
+        <div class="ref" id="ref">
+            <div class="color-primary"></div>
+            <div class="chart">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+            </div>
+        </div>
+        <script src="js/vendor.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+
+</html>

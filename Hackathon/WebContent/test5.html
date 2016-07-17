@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    center: {lat: 31.025679, lng: 121.435842},
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  });
+
+  var color = ['#00FF00','#00FF00','#FF0000']
+
+  var flightPlanCoordinates = getRount(arr);
+  var flightPaths;
+  for(i = 0; i < flightPlanCoordinates.length; i ++){
+    flightPaths[i] = new google.maps.Polyline({
+      path: flightPlanCoordinates[i][1],
+      geodesic: true,
+      strokeColor: color[flightPlanCoordinates[i][0]],
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+    flightPaths[i].setMap(map);
+  }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGGEtHW7l_5GEMwdFdwrEXmVW4XiwFMrs&signed_in=true&callback=initMap"
+        async defer>
+    </script>
+  </body>
+</html>
