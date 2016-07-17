@@ -2278,14 +2278,16 @@ pre {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center; }
-  .footer .footer {
-    position: fixed; }
+  .footer .tab-list {
+    font-size: 14px; }
+
+   .icon{
+    background-image: url('assets/graphic1.png');width: 20px;height: 20px;background-size: 20px 20px ;margin-left: 4px;
+  }
   .footer .footer .tab{
     margin-left: 20px;
   }
-    .footer .tab-map{
-    background-image: url('assets/placeholder.png');
-        background-size: 20px 20px;
+    .footer .footer .tab-map{
     margin-left: 20px;
   }
   .footer .footer .tab-data{
@@ -2299,7 +2301,6 @@ pre {
   }
     .footer .footer .tab .txt{
    font-size: 10px;
-  }font-size: 10px;
   }
   .footer .footer-block {
     vertical-align: middle;
